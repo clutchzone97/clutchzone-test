@@ -1,5 +1,6 @@
+import "@/styles/globals.css";
+import "@/styles/index.css";
 import type { AppProps } from 'next/app';
-import '../styles/globals.css';
 import '../utils/i18n'; // Initialize i18n
 import { SiteSettingsProvider } from '../context/SiteSettingsContext';
 import { ThemeProvider } from '../context/ThemeContext';
