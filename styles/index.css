@@ -1,0 +1,80 @@
+@import "tailwindcss";
+@config "./tailwind.config.js";
+
+/* Mobile-only padding to prevent content from being hidden behind the fixed header */
+@media (max-width: 768px) {
+  body {
+    padding-top: 64px;
+  }
+}
+
+html, body, #root {
+  height: 100%;
+  width: 100%;
+  overflow-x: hidden;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  @apply bg-light text-dark transition-colors duration-300;
+}
+
+.dark body {
+  @apply bg-dark text-light;
+}
+
+/* Scrollbar Styling */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-gray-100 dark:bg-gray-800;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-gray-400 dark:bg-gray-600 rounded;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-gray-500 dark:bg-gray-500;
+}
+
+
+.btn-primary-safe {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding-inline: 1.25rem;
+  padding-block: 0.75rem;
+  line-height: 1.3;
+  white-space: nowrap;
+  overflow: visible;
+  text-rendering: geometricPrecision;
+  font-feature-settings: "kern" 1, "liga" 1;
+  -webkit-font-smoothing: antialiased;
+  transition:
+    background-color 0.25s ease,
+    transform 0.2s ease,
+    box-shadow 0.25s ease;
+}
+
+.btn-primary-safe:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.18);
+}
+
+.btn-primary-safe:active {
+  transform: translateY(0);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+[dir="rtl"] .btn-primary-safe {
+  direction: rtl;
+  letter-spacing: normal;
+}
+
+[dir="ltr"] .btn-primary-safe {
+  direction: ltr;
+}

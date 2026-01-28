@@ -1,0 +1,10 @@
+/* Minimal global styles; Tailwind can be integrated later as needed */
+html, body {
+  margin: 0;
+  padding: 0;
+}
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
