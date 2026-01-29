@@ -6,6 +6,7 @@ import Logo from '../ui/Logo';
 import Link from 'next/link';
 import { useSiteSettings } from '../../context/SiteSettingsContext';
 import { useTranslation } from 'react-i18next';
+import LanguageSwitcher from '../LanguageSwitcher';
 
 const Footer: React.FC = () => {
   const { t } = useTranslation();
@@ -18,56 +19,53 @@ const Footer: React.FC = () => {
   const youtube = settings.socialLinks?.youtube || '#';
   const tiktok = (settings.socialLinks as any)?.tiktok || '#';
   const hours = (settings as any).businessHours || 'السبت - الخميس: 9:00 - 18:00';
-  const footerText = (settings as any).footerText || (settings as any).footerAboutText || 'Clutch Zone هو وجهتك الأولى لشراء وبيع السيارات والعقارات في مصر. نوفر لك أفضل الحلول لتلبية احتياجاتك بأسعار تنافسية.';
-
+  
   return (
-    <footer className="text-gray-300 pt-16 pb-8" style={{ backgroundColor: settings.footerBgColor || '#111827' }}>
+    <footer className="bg-brand-navy text-white pt-16 pb-8">
       <div className="container mx-auto px-4">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-8">
-          {/* About */}
-          <div className="space-y-4">
-            {settings.footerLogoUrl ? (
-              <Link href="/" aria-label="الانتقال إلى الصفحة الرئيسية">
-                <img
-                  src={settings.footerLogoUrl}
-                  alt="Clutch Zone"
-                  className="object-contain"
-                  style={{ height: (settings.footerLogoHeight ?? 40) ? `${settings.footerLogoHeight}px` : undefined, width: (settings.footerLogoWidth ?? undefined) ? `${settings.footerLogoWidth}px` : undefined }}
-                />
-              </Link>
-            ) : (
-              <Logo />
-            )}
-            <p className="text-sm">
-              {footerText}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
+          {/* Brand Info */}
+          <div className="space-y-6">
+            <Logo />
+            <p className="text-gray-400 text-sm leading-relaxed max-w-xs">
+              {t('footer_desc', 'ClutchZone هو وجهتك الأولى لشراء وبيع السيارات الفاخرة والعقارات المميزة في مصر. نوفر لك تجربة استثنائية تجمع بين الفخامة والثقة.')}
             </p>
+            <div className="pt-2">
+              <LanguageSwitcher />
+            </div>
           </div>
 
           {/* Quick Links */}
           <div>
-            <h3 className="text-lg font-semibold text-white mb-4">{t('quick_links_title')}</h3>
-            <ul className="space-y-2 text-sm">
-              <li><Link href="/" className="hover:text-primary transition-colors">{t('nav_home')}</Link></li>
-              <li><Link href="/cars" className="hover:text-primary transition-colors">{t('nav_cars')}</Link></li>
-              <li><Link href="/properties" className="hover:text-primary transition-colors">{t('nav_properties')}</Link></li>
-              <li><Link href="/about" className="hover:text-primary transition-colors">{t('nav_about')}</Link></li>
+            <h3 className="text-lg font-bold text-white mb-6 border-b border-white/10 pb-2 inline-block">{t('quick_links_title', 'روابط سريعة')}</h3>
+            <ul className="space-y-3 text-sm">
+              <li><Link href="/cars" className="text-gray-400 hover:text-brand-gold transition-colors">{t('nav_cars', 'سيارات')}</Link></li>
+              <li><Link href="/properties" className="text-gray-400 hover:text-brand-gold transition-colors">{t('nav_properties', 'عقارات')}</Link></li>
+              <li><Link href="/about" className="text-gray-400 hover:text-brand-gold transition-colors">{t('nav_about', 'من نحن')}</Link></li>
+              <li><Link href="/contact" className="text-gray-400 hover:text-brand-gold transition-colors">{t('nav_contact', 'تواصل معنا')}</Link></li>
             </ul>
           </div>
 
           {/* Contact Info */}
           <div>
-            <h3 className="text-lg font-semibold text-white mb-4">{t('contact_title')}</h3>
-            <ul className="space-y-3 text-sm">
-              <li className="flex items-center">
-                <FaPhone className="me-3 text-primary" />
-                <span>{phone}</span>
+            <h3 className="text-lg font-bold text-white mb-6 border-b border-white/10 pb-2 inline-block">{t('contact_title', 'معلومات التواصل')}</h3>
+            <ul className="space-y-4 text-sm">
+              <li className="flex items-center text-gray-400 group">
+                <div className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center me-3 group-hover:bg-brand-gold group-hover:text-brand-navy transition-colors">
+                  <FaPhone />
+                </div>
+                <span dir="ltr">{phone}</span>
               </li>
-              <li className="flex items-center">
-                <FaEnvelope className="me-3 text-primary" />
+              <li className="flex items-center text-gray-400 group">
+                <div className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center me-3 group-hover:bg-brand-gold group-hover:text-brand-navy transition-colors">
+                  <FaEnvelope />
+                </div>
                 <span>{email}</span>
               </li>
-              <li className="flex items-center">
-                <FaClock className="me-3 text-primary" />
+              <li className="flex items-center text-gray-400 group">
+                <div className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center me-3 group-hover:bg-brand-gold group-hover:text-brand-navy transition-colors">
+                  <FaClock />
+                </div>
                 <span>{hours}</span>
               </li>
             </ul>
@@ -75,19 +73,33 @@ const Footer: React.FC = () => {
 
           {/* Social Media */}
           <div>
-            <h3 className="text-lg font-semibold text-white mb-4">{t('follow_us_title')}</h3>
-            <div className="flex space-x-reverse space-x-4">
-              <a href={facebook} target="_blank" rel="noreferrer" className="text-gray-400 hover:text-primary transition-colors"><FaFacebook size={24} /></a>
-              <a href={twitter} target="_blank" rel="noreferrer" className="text-gray-400 hover:text-primary transition-colors"><FaXTwitter size={24} /></a>
-              <a href={instagram} target="_blank" rel="noreferrer" className="text-gray-400 hover:text-primary transition-colors"><FaInstagram size={24} /></a>
-              <a href={youtube} target="_blank" rel="noreferrer" className="text-gray-400 hover:text-primary transition-colors"><FaYoutube size={24} /></a>
-              <a href={tiktok} target="_blank" rel="noreferrer" className="text-gray-400 hover:text-primary transition-colors"><FaTiktok size={24} /></a>
+            <h3 className="text-lg font-bold text-white mb-6 border-b border-white/10 pb-2 inline-block">{t('follow_us_title', 'تابعنا')}</h3>
+            <div className="flex gap-3">
+              <a href={facebook} target="_blank" rel="noreferrer" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-gray-400 hover:bg-brand-gold hover:text-brand-navy transition-all">
+                <FaFacebook size={18} />
+              </a>
+              <a href={instagram} target="_blank" rel="noreferrer" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-gray-400 hover:bg-brand-gold hover:text-brand-navy transition-all">
+                <FaInstagram size={18} />
+              </a>
+              <a href={twitter} target="_blank" rel="noreferrer" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-gray-400 hover:bg-brand-gold hover:text-brand-navy transition-all">
+                <FaXTwitter size={18} />
+              </a>
+              <a href={youtube} target="_blank" rel="noreferrer" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-gray-400 hover:bg-brand-gold hover:text-brand-navy transition-all">
+                <FaYoutube size={18} />
+              </a>
+              <a href={tiktok} target="_blank" rel="noreferrer" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-gray-400 hover:bg-brand-gold hover:text-brand-navy transition-all">
+                <FaTiktok size={18} />
+              </a>
             </div>
           </div>
         </div>
 
-        <div className="border-t border-gray-700 mt-8 pt-6 text-center text-sm">
-          <p>{t('footer_copyright')}</p>
+        <div className="border-t border-white/10 pt-8 text-center text-sm text-gray-500 flex flex-col md:flex-row justify-between items-center gap-4">
+          <p>© {new Date().getFullYear()} ClutchZone. جميع الحقوق محفوظة.</p>
+          <div className="flex gap-4">
+            <Link href="/privacy" className="hover:text-white transition-colors">سياسة الخصوصية</Link>
+            <Link href="/terms" className="hover:text-white transition-colors">شروط الاستخدام</Link>
+          </div>
         </div>
       </div>
     </footer>

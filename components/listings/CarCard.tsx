@@ -6,7 +6,6 @@ import Card from '../ui/Card';
 import { formatCurrency, formatNumber } from '../../utils/formatters';
 import { FaTachometerAlt, FaCog, FaGasPump } from 'react-icons/fa';
 
-// شكل بيانات السيارة من الـAPI
 interface CarDoc {
   _id: string;
   title?: string;
@@ -18,7 +17,7 @@ interface CarDoc {
   transmission?: string;
   fuel?: string;
   images?: string[];
-  imageUrl?: string; // دعم قديم
+  imageUrl?: string;
   featured?: boolean;
   slug?: string;
 }
@@ -31,40 +30,50 @@ const CarCard: React.FC<CarCardProps> = ({ car }) => {
   const displayTitle = car.title || `${car.brand || ''} ${car.model || ''}`.trim() || 'سيارة';
   const img = (car.images && car.images[0]) || car.imageUrl || `https://picsum.photos/seed/${car._id || 'car'}/640/480`;
   return (
-    <Card>
-      <div className="relative">
-        <img src={img} alt={displayTitle} className="w-full h-48 object-cover" />
+    <div className="group bg-white rounded-xl shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-100">
+      <div className="relative overflow-hidden aspect-[4/3]">
+        <img 
+          src={img} 
+          alt={displayTitle} 
+          className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500" 
+        />
         {car.featured && (
-          <span className="absolute top-2 left-2 bg-secondary text-white text-xs font-bold px-2 py-1 rounded">مميز</span>
+          <span className="absolute top-3 right-3 bg-brand-gold text-brand-navy text-xs font-bold px-3 py-1 rounded-full shadow-md z-10">مميز</span>
         )}
         {car.year && (
-          <span className="absolute top-2 right-2 bg-blue-500 text-white text-xs font-bold px-2 py-1 rounded">{car.year}</span>
+          <span className="absolute top-3 left-3 bg-brand-navy/80 backdrop-blur-sm text-white text-xs font-bold px-3 py-1 rounded-full z-10">{car.year}</span>
         )}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
       </div>
-      <div className="p-4">
-        <h3 className="text-lg font-bold text-gray-800 mb-2">{displayTitle}</h3>
+      <div className="p-5">
+        <h3 className="text-lg font-bold text-brand-navy mb-2 line-clamp-1 group-hover:text-brand-gold transition-colors">{displayTitle}</h3>
         {typeof car.price === 'number' && (
-          <p className="text-2xl font-bold text-primary mb-4">{formatCurrency(car.price)}</p>
+          <p className="text-2xl font-bold text-brand-gold mb-4">{formatCurrency(car.price)}</p>
         )}
-        <div className="grid grid-cols-3 gap-2 text-sm text-gray-600 mb-4 text-center">
-          <div className="flex flex-col items-center">
-            <FaTachometerAlt className="text-gray-400 mb-1"/>
+        <div className="flex items-center justify-between text-sm text-gray-500 mb-4 border-t border-gray-100 pt-4">
+          <div className="flex flex-col items-center gap-1">
+            <FaTachometerAlt className="text-gray-400"/>
             <span>{formatNumber(car.km || 0)} كم</span>
           </div>
-          <div className="flex flex-col items-center">
-            <FaCog className="text-gray-400 mb-1"/>
+          <div className="w-px h-8 bg-gray-100" />
+          <div className="flex flex-col items-center gap-1">
+            <FaCog className="text-gray-400"/>
             <span>{car.transmission || '-'}</span>
           </div>
-          <div className="flex flex-col items-center">
-            <FaGasPump className="text-gray-400 mb-1"/>
+          <div className="w-px h-8 bg-gray-100" />
+          <div className="flex flex-col items-center gap-1">
+            <FaGasPump className="text-gray-400"/>
             <span>{car.fuel || '-'}</span>
           </div>
         </div>
-        <Link href={`/cars/${car.slug || car._id}`} className="block w-full text-center bg-primary text-white py-2 rounded-md hover:bg-primary-dark transition-colors duration-300">
+        <Link 
+          href={`/cars/${car.slug || car._id}`} 
+          className="block w-full text-center bg-brand-navy text-white font-bold py-3 rounded-lg hover:bg-brand-gold hover:text-brand-navy transition-all duration-300"
+        >
           عرض التفاصيل
         </Link>
       </div>
-    </Card>
+    </div>
   );
 };
 

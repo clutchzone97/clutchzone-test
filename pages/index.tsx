@@ -1,44 +1,32 @@
-import React, { useEffect, useMemo, useState } from 'react';
+
+import React, { useState } from 'react';
 import type { GetStaticProps } from 'next';
 import { useTranslation } from 'react-i18next';
-import WakeServerOverlay from "../components/ui/WakeServerOverlay";
 import Header from '../components/layout/Header';
 import Footer from '../components/layout/Footer';
 import CarCard from '../components/listings/CarCard';
 import PropertyCard from '../components/listings/PropertyCard';
-import { FaCar, FaBuilding, FaTags, FaHeadset } from 'react-icons/fa';
-import Link from 'next/link';
-import api from '../utils/api';
-import { useSiteSettings } from '../context/SiteSettingsContext';
-import HeroSlider from '../components/ui/HeroSlider';
+import SmartSearch from '../components/ui/SmartSearch';
 import SEO from '../components/SEO';
-import { useMediaQuery } from '../hooks/useMediaQuery';
+import { FaCheckCircle, FaShieldAlt, FaHandshake, FaCamera } from 'react-icons/fa';
+import Link from 'next/link';
 
-// Define interface for data props if you want to pre-fetch for SSR/SSG
 interface HomeProps {
-  // We can choose to pre-fetch or keep it client-side. 
-  // Since the original was CSR, let's keep it CSR for dynamic data or switch to ISR.
-  // Let's use ISR for featured items for better SEO and performance.
   initialFeaturedCars?: any[];
   initialFeaturedProperties?: any[];
 }
 
 export const getStaticProps: GetStaticProps<HomeProps> = async () => {
-  // Optional: Fetch initial data at build time (ISR)
-  // If backend is not available at build time, we can return empty arrays and fetch client-side.
-  // For now, let's try to fetch, but fallback gracefully.
   let initialFeaturedCars = [];
   let initialFeaturedProperties = [];
 
   try {
-     // Note: In build time, localhost might not be reachable if backend is external or not running.
-     // If backend is external (Render), it should work.
      const [carsRes, propsRes] = await Promise.all([
-        fetch('https://clutchzone-backend.onrender.com/api/cars?featured=true&sort=newest').then(r => r.json()),
-        fetch('https://clutchzone-backend.onrender.com/api/properties?featured=true').then(r => r.json())
+        fetch('https://clutchzone-backend.onrender.com/api/cars?featured=true&sort=newest&limit=3').then(r => r.json()).catch(() => []),
+        fetch('https://clutchzone-backend.onrender.com/api/properties?featured=true&limit=2').then(r => r.json()).catch(() => [])
      ]);
-     initialFeaturedCars = carsRes || [];
-     initialFeaturedProperties = propsRes || [];
+     initialFeaturedCars = Array.isArray(carsRes) ? carsRes : (carsRes?.data || []);
+     initialFeaturedProperties = Array.isArray(propsRes) ? propsRes : (propsRes?.data || []);
   } catch (e) {
     console.error("Failed to fetch initial data for home:", e);
   }
@@ -48,209 +36,168 @@ export const getStaticProps: GetStaticProps<HomeProps> = async () => {
       initialFeaturedCars,
       initialFeaturedProperties
     },
-    revalidate: 60 // Revalidate every minute
+    revalidate: 60
   };
 };
 
 const HomePage: React.FC<HomeProps> = ({ initialFeaturedCars, initialFeaturedProperties }) => {
   const { t } = useTranslation();
-  const [featuredCars, setFeaturedCars] = useState<any[]>(initialFeaturedCars || []);
-  const [featuredProperties, setFeaturedProperties] = useState<any[]>(initialFeaturedProperties || []);
-  const { settings } = useSiteSettings();
-  const isMobile = useMediaQuery('(max-width: 767px)');
-  const isDesktop = useMediaQuery('(min-width: 1024px)');
-  const [currentSlide, setCurrentSlide] = useState(0);
-  const [pulse, setPulse] = useState(false);
+  
+  // Fallback data for design if empty
+  const cars = initialFeaturedCars?.length ? initialFeaturedCars : [
+    { _id: '1', title: 'BMW X6 M Competition', price: 5500000, year: 2024, km: 5000, transmission: 'Automatic', fuel: 'Petrol', featured: true, imageUrl: 'https://images.unsplash.com/photo-1617788138017-80ad40651399?auto=format&fit=crop&q=80&w=800' },
+    { _id: '2', title: 'Mercedes-Benz G-Class', price: 8200000, year: 2023, km: 12000, transmission: 'Automatic', fuel: 'Petrol', featured: true, imageUrl: 'https://images.unsplash.com/photo-1520050206274-2dc33f0ca8a8?auto=format&fit=crop&q=80&w=800' },
+    { _id: '3', title: 'Porsche 911 GT3', price: 9500000, year: 2024, km: 1500, transmission: 'Automatic', fuel: 'Petrol', featured: true, imageUrl: 'https://images.unsplash.com/photo-1503376763036-066120622c74?auto=format&fit=crop&q=80&w=800' },
+  ];
 
-  const slides = useMemo(() => {
-    const carImgs = (featuredCars || []).map((c:any) => (c.images && c.images[0]) || c.imageUrl).filter(Boolean);
-    const propImgs = (featuredProperties || []).map((p:any) => (p.images && p.images[0]) || p.imageUrl).filter(Boolean);
-    const mix: string[] = [];
-    const max = Math.max(carImgs.length, propImgs.length);
-    for (let i=0;i<max;i++) {
-      if (carImgs[i]) mix.push(carImgs[i]);
-      if (propImgs[i]) mix.push(propImgs[i]);
-    }
-    return mix.length ? mix : ["https://picsum.photos/seed/hero/1920/1080"];
-  }, [featuredCars, featuredProperties]);
-
-  const [idx, setIdx] = useState(0);
-
-  useEffect(() => {
-    if (!slides.length) return;
-    const t = setInterval(() => setIdx((i) => (i + 1) % slides.length), 3000);
-    return () => clearInterval(t);
-  }, [slides]);
-
-  useEffect(() => {
-    if (!slides.length) return;
-    const ms = settings.heroSlideIntervalMs ?? 3000;
-    const timer = setInterval(() => {
-      setCurrentSlide((i) => {
-        const next = (i + 1) % slides.length;
-        setPulse(true);
-        setTimeout(() => setPulse(false), 250);
-        return next;
-      });
-    }, ms);
-    return () => clearInterval(timer);
-  }, [slides, settings.heroSlideIntervalMs]);
-
-  useEffect(() => {
-    // Client-side refresh (optional, if we want fresh data on mount)
-    // Or if initial props were empty.
-    if (!initialFeaturedCars?.length && !initialFeaturedProperties?.length) {
-        const load = async () => {
-        try {
-            const [carsRes, propsRes] = await Promise.all([
-            api.get('/cars', { params: { featured: true, sort: 'newest' } }),
-            api.get('/properties', { params: { featured: true } }),
-            ]);
-            setFeaturedCars(carsRes.data || []);
-            setFeaturedProperties(propsRes.data || []);
-        } catch {}
-        };
-        load();
-    }
-  }, []);
-
-  const structuredData = {
-    "@context": "https://schema.org",
-    "@type": "WebSite",
-    "name": "Clutch Zone",
-    "url": "https://clutchzone.co",
-    "potentialAction": {
-      "@type": "SearchAction",
-      "target": "https://clutchzone.co/cars?search={search_term_string}",
-      "query-input": "required name=search_term_string"
-    }
-  };
+  const properties = initialFeaturedProperties?.length ? initialFeaturedProperties : [
+    { _id: '1', title: 'Luxury Villa in New Cairo', price: 15000000, area: 450, rooms: 5, baths: 6, location: 'New Cairo', purpose: 'للبيع', featured: true, imageUrl: 'https://images.unsplash.com/photo-1613977257363-707ba9348227?auto=format&fit=crop&q=80&w=800' },
+    { _id: '2', title: 'Sea View Apartment in North Coast', price: 8500000, area: 180, rooms: 3, baths: 2, location: 'North Coast', purpose: 'للبيع', featured: true, imageUrl: 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&q=80&w=800' },
+  ];
 
   return (
-    <div className="bg-light">
+    <>
       <SEO 
-        title="سوق السيارات والعقارات في مصر"
-        description="منصة مصرية موثوقة لشراء وبيع السيارات والعقارات. اكتشف أفضل العروض بأسعار تنافسية وخدمة دعم متميزة للمستخدمين في مصر."
-        canonical="/"
-        keywords="سيارات للبيع في مصر, عقارات للبيع في مصر, شقق للبيع, سيارات مستعملة"
-        structuredData={structuredData}
+        title={t('home_title', 'ClutchZone - سوق السيارات والعقارات الفاخرة في مصر')}
+        description={t('home_desc', 'اكتشف أفضل السيارات والعقارات في مصر مع ClutchZone. سوق متميز يجمع بين الفخامة والثقة.')}
       />
-      <WakeServerOverlay />
       <Header />
-
-      {/* Hero Section */}
-      <div className="hide-hero-dots-mobile">
-      <style>{`.hide-hero-dots-mobile .pointer-events-none.absolute.inset-x-0.bottom-3, .hide-hero-dots-mobile .pointer-events-none.absolute.inset-x-0.bottom-5 { display: none !important; }`}</style>
-      <HeroSlider images={slides} heightClass="h-[500px] md:h-[600px]">
-        <div className="flex h-full flex-col items-center justify-center text-center px-4">
-          <h1 className="text-4xl md:text-6xl font-bold mb-4 drop-shadow-lg animate-fade-in-up">
-            {t('hero_title')}
-          </h1>
-          <p className="text-lg md:text-2xl mb-8 drop-shadow-md animate-fade-in-up delay-100">
-            {t('hero_subtitle')}
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 animate-fade-in-up delay-200">
-            <Link href="/cars" className="bg-primary hover:bg-primary-dark text-white px-8 py-3 rounded-full font-bold transition transform hover:scale-105 flex items-center justify-center gap-2">
-              <FaCar /> {t('browse_cars')}
-            </Link>
-            <Link href="/properties" className="bg-secondary hover:bg-secondary-dark text-white px-8 py-3 rounded-full font-bold transition transform hover:scale-105 flex items-center justify-center gap-2">
-              <FaBuilding /> {t('browse_properties')}
-            </Link>
+      
+      <main className="bg-brand-light min-h-screen pb-20">
+        {/* 1. Hero Section */}
+        <section className="relative h-[85vh] min-h-[600px] flex items-center justify-center overflow-hidden">
+          {/* Background Image */}
+          <div className="absolute inset-0 z-0">
+             {/* Dual Marketplace Concept: Split or Blend */}
+            <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&q=80&w=2000')] bg-cover bg-center" />
+            <div className="absolute inset-0 bg-brand-navy/60" /> 
+            {/* Gradient Overlay */}
+            <div className="absolute inset-0 bg-gradient-to-t from-brand-navy via-transparent to-brand-navy/30" />
           </div>
-        </div>
-      </HeroSlider>
-      </div>
 
-      {/* Features Section */}
-      <section className="py-16 bg-white">
-        <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold text-center text-gray-800 mb-12">{t('why_choose_us')}</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="text-center p-6 bg-gray-50 rounded-xl hover:shadow-lg transition duration-300">
-              <div className="bg-blue-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 text-primary">
-                <FaTags size={30} />
-              </div>
-              <h3 className="text-xl font-bold mb-2">{t('best_prices')}</h3>
-              <p className="text-gray-600">{t('best_prices_desc')}</p>
-            </div>
-            <div className="text-center p-6 bg-gray-50 rounded-xl hover:shadow-lg transition duration-300">
-              <div className="bg-green-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 text-secondary">
-                <FaBuilding size={30} />
-              </div>
-              <h3 className="text-xl font-bold mb-2">{t('trusted_listings')}</h3>
-              <p className="text-gray-600">{t('trusted_listings_desc')}</p>
-            </div>
-            <div className="text-center p-6 bg-gray-50 rounded-xl hover:shadow-lg transition duration-300">
-              <div className="bg-purple-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 text-purple-600">
-                <FaHeadset size={30} />
-              </div>
-              <h3 className="text-xl font-bold mb-2">{t('support_24_7')}</h3>
-              <p className="text-gray-600">{t('support_desc')}</p>
+          <div className="container mx-auto px-4 relative z-10 text-center text-white mt-10">
+            <h1 className="text-4xl md:text-6xl font-bold mb-6 leading-tight">
+              {t('hero_headline', 'انطلق بخياراتك الأفضل')}
+            </h1>
+            <p className="text-xl md:text-2xl text-gray-200 mb-10 max-w-2xl mx-auto">
+              {t('hero_subheadline', 'سيارات فاخرة وعقارات مميزة في مكان واحد')}
+            </p>
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+              <Link 
+                href="/cars" 
+                className="w-full sm:w-auto px-8 py-4 bg-brand-gold text-brand-navy font-bold rounded-full hover:bg-white transition-all shadow-lg text-lg"
+              >
+                {t('cta_cars', 'تصفح السيارات')}
+              </Link>
+              <Link 
+                href="/properties" 
+                className="w-full sm:w-auto px-8 py-4 bg-transparent border-2 border-white text-white font-bold rounded-full hover:bg-white hover:text-brand-navy transition-all shadow-lg text-lg"
+              >
+                {t('cta_properties', 'تصفح العقارات')}
+              </Link>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* Featured Cars */}
-      <section className="py-16 bg-gray-50">
-        <div className="container mx-auto px-4">
-          <div className="flex justify-between items-center mb-8">
-            <h2 className="text-3xl font-bold text-gray-800">{t('featured_cars')}</h2>
-            <Link href="/cars" className="text-primary font-semibold hover:underline">
-              {t('view_all')}
+        {/* 2. Smart Search */}
+        <SmartSearch />
+
+        {/* 3. Featured Cars Section */}
+        <section className="container mx-auto px-4 py-20">
+          <div className="flex items-center justify-between mb-10">
+            <h2 className="text-3xl font-bold text-brand-navy border-r-4 border-brand-gold pr-4">
+              {t('featured_cars_title', 'سيارات مميزة')}
+            </h2>
+            <Link href="/cars" className="text-brand-gold font-bold hover:underline">
+              {t('view_all', 'عرض الكل')} &larr;
             </Link>
           </div>
-          {featuredCars.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-              {featuredCars.slice(0, 4).map((car) => (
-                <CarCard key={car._id} car={car} />
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {cars.map((car: any) => (
+              <CarCard key={car._id} car={car} />
+            ))}
+          </div>
+        </section>
+
+        {/* 4. Featured Properties Section */}
+        <section className="bg-white py-20">
+          <div className="container mx-auto px-4">
+            <div className="flex items-center justify-between mb-10">
+              <h2 className="text-3xl font-bold text-brand-navy border-r-4 border-brand-gold pr-4">
+                {t('featured_props_title', 'عقارات مميزة')}
+              </h2>
+              <Link href="/properties" className="text-brand-gold font-bold hover:underline">
+                {t('view_all', 'عرض الكل')} &larr;
+              </Link>
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+              {properties.map((prop: any) => (
+                <PropertyCard key={prop._id} property={prop} />
               ))}
             </div>
-          ) : (
-            <p className="text-center text-gray-500 py-10">{t('no_cars_found')}</p>
-          )}
-        </div>
-      </section>
-
-      {/* Featured Properties */}
-      <section className="py-16 bg-white">
-        <div className="container mx-auto px-4">
-          <div className="flex justify-between items-center mb-8">
-            <h2 className="text-3xl font-bold text-gray-800">{t('featured_properties')}</h2>
-            <Link href="/properties" className="text-secondary font-semibold hover:underline">
-              {t('view_all')}
-            </Link>
           </div>
-          {featuredProperties.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-              {featuredProperties.slice(0, 4).map((property) => (
-                <PropertyCard key={property._id} property={property} />
+        </section>
+
+        {/* 5. Why ClutchZone Section */}
+        <section className="container mx-auto px-4 py-20">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl font-bold text-brand-navy mb-4">{t('why_us_title', 'لماذا ClutchZone؟')}</h2>
+            <p className="text-gray-500 max-w-2xl mx-auto">نقدم لك تجربة بيع وشراء استثنائية تجمع بين الأمان والسرعة والسهولة.</p>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {[
+              { icon: FaShieldAlt, title: 'وسطاء معتمدين', desc: 'نتعامل فقط مع شركاء موثوقين لضمان جودة المعروضات.' },
+              { icon: FaCheckCircle, title: 'بيانات موثوقة', desc: 'كل سيارة وعقار يتم فحصه والتأكد من صحة بياناته.' },
+              { icon: FaHandshake, title: 'بدون عمولات خفية', desc: 'تعامل بشفافية تامة دون أي مصاريف غير متوقعة.' },
+              { icon: FaCamera, title: 'صور حقيقية', desc: 'صور عالية الجودة تعكس الواقع بدقة ووضوح.' },
+            ].map((item, idx) => (
+              <div key={idx} className="bg-white p-8 rounded-2xl shadow-sm text-center hover:shadow-lg transition-shadow border border-gray-50 group">
+                <div className="w-16 h-16 bg-brand-light rounded-full flex items-center justify-center mx-auto mb-6 group-hover:bg-brand-navy transition-colors">
+                  <item.icon className="text-3xl text-brand-navy group-hover:text-brand-gold transition-colors" />
+                </div>
+                <h3 className="text-xl font-bold text-brand-navy mb-3">{item.title}</h3>
+                <p className="text-gray-500 text-sm leading-relaxed">{item.desc}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* 6. Trust & Partners */}
+        <section className="bg-gray-50 py-16 border-y border-gray-200">
+          <div className="container mx-auto px-4">
+            <p className="text-center text-gray-400 font-bold uppercase tracking-widest mb-8 text-sm">
+              {t('trusted_by', 'شركاء النجاح')}
+            </p>
+            <div className="flex flex-wrap justify-center gap-12 opacity-60 grayscale">
+              {/* Placeholders for logos */}
+              {[1, 2, 3, 4, 5].map((i) => (
+                <div key={i} className="h-12 flex items-center font-bold text-2xl text-gray-400">
+                  PARTNER {i}
+                </div>
               ))}
             </div>
-          ) : (
-            <p className="text-center text-gray-500 py-10">{t('no_properties_found')}</p>
-          )}
-        </div>
-      </section>
-
-      {/* CTA Section */}
-      <section className="py-20 bg-gradient-to-r from-primary to-blue-600 text-white text-center">
-        <div className="container mx-auto px-4">
-          <h2 className="text-3xl md:text-4xl font-bold mb-6">{t('ready_to_start')}</h2>
-          <p className="text-xl mb-8 max-w-2xl mx-auto opacity-90">{t('cta_desc')}</p>
-          <div className="flex flex-col sm:flex-row justify-center gap-4">
-            <Link href="/contact" className="bg-white text-primary px-8 py-3 rounded-full font-bold hover:bg-gray-100 transition shadow-lg">
-              {t('contact_us')}
-            </Link>
-            <Link href="/about" className="bg-transparent border-2 border-white text-white px-8 py-3 rounded-full font-bold hover:bg-white/10 transition">
-              {t('nav_about')}
-            </Link>
           </div>
-        </div>
-      </section>
+        </section>
+
+        {/* 7. SEO Content Block */}
+        <section className="container mx-auto px-4 py-20">
+          <div className="prose max-w-4xl mx-auto text-gray-600">
+            <h3 className="text-2xl font-bold text-brand-navy mb-4">سوق السيارات والعقارات الأول في مصر</h3>
+            <p className="mb-4">
+              تعتبر ClutchZone المنصة الرائدة في مصر لبيع وشراء السيارات الفاخرة والعقارات المميزة. سواء كنت تبحث عن سيارة أحلامك أو منزلك الجديد، نوفر لك مجموعة واسعة من الخيارات التي تناسب احتياجاتك.
+            </p>
+            <p>
+              نغطي جميع مناطق مصر بما في ذلك القاهرة الجديدة، التجمع الخامس، الشيخ زايد، والساحل الشمالي. تصفح أحدث الموديلات من بي إم دبليو، مرسيدس، وبورش، أو اكتشف الفلل والشقق الفاخرة بأفضل الأسعار.
+            </p>
+          </div>
+        </section>
+      </main>
 
       <Footer />
-    </div>
+    </>
   );
 };
 

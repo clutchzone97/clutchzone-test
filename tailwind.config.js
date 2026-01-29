@@ -8,15 +8,25 @@ module.exports = {
   theme: {
     extend: {
       colors: {
+        brand: {
+          navy: '#0A192F', // Deep Blue / Dark Navy
+          gold: '#C6A87C', // Accent Gold
+          blue: '#2563EB', // Electric Blue (optional accent)
+          light: '#F8FAFC', // Light background
+        },
         primary: {
-          DEFAULT: '#1a56db', // Customize as needed based on original
-          dark: '#1e40af',
+          DEFAULT: '#0A192F', 
+          dark: '#020617',
         },
         secondary: {
-          DEFAULT: '#f97316',
-          dark: '#ea580c',
+          DEFAULT: '#C6A87C',
+          dark: '#B89665',
         },
         dark: '#1f2937',
+      },
+      fontFamily: {
+        sans: ['Cairo', 'sans-serif'],
+        cairo: ['Cairo', 'sans-serif'],
       },
     },
   },

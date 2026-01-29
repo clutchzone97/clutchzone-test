@@ -1,5 +1,6 @@
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap');
 @import "tailwindcss";
-@config "./tailwind.config.js";
+@config "../tailwind.config.js";
 
 /* Mobile-only padding to prevent content from being hidden behind the fixed header */
 @media (max-width: 768px) {
@@ -14,14 +15,15 @@ html, body, #root {
   overflow-x: hidden;
   touch-action: manipulation;
   -webkit-tap-highlight-color: transparent;
+  font-family: 'Cairo', sans-serif;
 }
 
 body {
-  @apply bg-light text-dark transition-colors duration-300;
+  @apply bg-brand-light text-brand-navy transition-colors duration-300;
 }
 
 .dark body {
-  @apply bg-dark text-light;
+  @apply bg-brand-navy text-brand-light;
 }
 
 /* Scrollbar Styling */

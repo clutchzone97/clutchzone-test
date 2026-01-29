@@ -1,16 +1,25 @@
+
 import Head from 'next/head';
 import type { GetStaticProps } from 'next';
-import Link from 'next/link';
 import { buildCanonical, metaDescriptionFromText } from '@/utils/seo';
+import Header from '@/components/layout/Header';
+import Footer from '@/components/layout/Footer';
+import PropertyCard from '@/components/listings/PropertyCard';
 
 type PropertyDoc = {
   _id: string;
-  title?: string;
+  title: string;
   type?: string;
+  purpose?: string;
+  price?: number;
+  area?: number;
+  rooms?: number;
+  baths?: number;
   location?: string;
-  slug?: string;
   images?: string[];
   imageUrl?: string;
+  featured?: boolean;
+  slug?: string;
 };
 
 type Props = {
@@ -33,8 +42,8 @@ export const getStaticProps: GetStaticProps<Props> = async () => {
 };
 
 export default function PropertiesIndex({ properties }: Props) {
-  const title = 'العقارات';
-  const description = metaDescriptionFromText('قائمة العقارات المتاحة لدى Clutch Zone.');
+  const title = 'عقارات للبيع والإيجار | ClutchZone';
+  const description = metaDescriptionFromText('اكتشف أفضل العقارات في مصر. فلل، شقق، ومحلات تجارية.');
   const canonical = buildCanonical('/properties');
 
   return (
@@ -44,22 +53,24 @@ export default function PropertiesIndex({ properties }: Props) {
         <meta name="description" content={description} />
         {canonical && <link rel="canonical" href={canonical} />}
       </Head>
-      <main>
-        <h1>{title}</h1>
-        <ul>
-          {properties.map((p) => {
-            const t = p.title || `${p.type || ''} - ${p.location || ''}`.trim() || 'عقار';
-            const img = (p.images && p.images[0]) || p.imageUrl || '';
-            const href = `/properties/${p.slug || p._id}`;
-            return (
-              <li key={p._id} style={{ marginBottom: 16 }}>
-                <Link href={href}>{t}</Link>
-                {img && <img src={img} alt={t} style={{ maxWidth: 320 }} />}
-              </li>
-            );
-          })}
-        </ul>
+      <Header />
+      <main className="bg-brand-light min-h-screen py-20 mt-16">
+        <div className="container mx-auto px-4">
+          <h1 className="text-3xl font-bold text-brand-navy mb-8 border-r-4 border-brand-gold pr-4">عقارات مميزة</h1>
+          {properties.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              {properties.map((p) => (
+                <PropertyCard key={p._id} property={p} />
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-20 text-gray-500">
+              <p>لا توجد عقارات متاحة حالياً.</p>
+            </div>
+          )}
+        </div>
       </main>
+      <Footer />
     </>
   );
 }

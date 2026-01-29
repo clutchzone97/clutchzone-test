@@ -27,47 +27,59 @@ interface PropertyCardProps {
 }
 
 const PropertyCard: React.FC<PropertyCardProps> = ({ property }) => {
-  const statusColor = property.purpose === 'للبيع' ? 'bg-secondary' : 'bg-yellow-500';
+  const isSale = property.purpose === 'للبيع';
   const img = (property.images && property.images[0]) || property.imageUrl || `https://picsum.photos/seed/${property._id || 'property'}/640/480`;
   return (
-    <Card>
-      <div className="relative">
-        <img src={img} alt={property.title} className="w-full h-48 object-cover" />
+    <div className="group bg-white rounded-xl shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-100 flex flex-col">
+      <div className="relative overflow-hidden aspect-[16/9]">
+        <img 
+          src={img} 
+          alt={property.title} 
+          className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500" 
+        />
         {property.featured && (
-          <span className="absolute top-2 left-2 bg-secondary text-white text-xs font-bold px-2 py-1 rounded">مميز</span>
+          <span className="absolute top-3 right-3 bg-brand-gold text-brand-navy text-xs font-bold px-3 py-1 rounded-full shadow-md z-10">مميز</span>
         )}
         {property.purpose && (
-          <span className={`absolute top-2 right-2 text-white text-xs font-bold px-2 py-1 rounded ${statusColor}`}>{property.purpose}</span>
+          <span className={`absolute top-3 left-3 text-white text-xs font-bold px-3 py-1 rounded-full z-10 shadow-sm ${isSale ? 'bg-brand-navy' : 'bg-green-600'}`}>
+            {property.purpose}
+          </span>
         )}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
       </div>
-      <div className="p-4">
-        <h3 className="text-lg font-bold text-gray-800 mb-2">{property.title}</h3>
-        {typeof property.price === 'number' && (
-          <p className="text-2xl font-bold text-secondary mb-2">{formatCurrency(property.price)}</p>
-        )}
-        <div className="flex items-center text-sm text-gray-500 mb-4">
-          <FaMapMarkerAlt className="me-2 text-gray-400"/>
-          <span>{property.location || '-'}</span>
+      <div className="p-5 flex flex-col flex-1">
+        <div className="flex items-center text-sm text-gray-500 mb-2">
+          <FaMapMarkerAlt className="me-1 text-brand-gold"/>
+          <span className="truncate">{property.location || '-'}</span>
         </div>
-        <div className="grid grid-cols-3 gap-2 text-sm text-gray-600 mb-4 text-center">
-          <div className="flex flex-col items-center">
-            <FaRulerCombined className="text-gray-400 mb-1"/>
+        <h3 className="text-xl font-bold text-brand-navy mb-2 line-clamp-1 group-hover:text-brand-gold transition-colors">{property.title}</h3>
+        {typeof property.price === 'number' && (
+          <p className="text-2xl font-bold text-brand-gold mb-4">{formatCurrency(property.price)}</p>
+        )}
+        
+        <div className="mt-auto pt-4 border-t border-gray-100 grid grid-cols-3 gap-2 text-sm text-gray-600 mb-4">
+          <div className="flex flex-col items-center gap-1">
+            <FaRulerCombined className="text-gray-400"/>
             <span>{formatNumber(property.area || 0)} م²</span>
           </div>
-          <div className="flex flex-col items-center">
-            <FaBed className="text-gray-400 mb-1"/>
-            <span>{property.rooms ?? '-'} غرف نوم</span>
+          <div className="flex flex-col items-center gap-1 border-r border-l border-gray-100">
+            <FaBed className="text-gray-400"/>
+            <span>{property.rooms ?? '-'}</span>
           </div>
-          <div className="flex flex-col items-center">
-            <FaBath className="text-gray-400 mb-1"/>
-            <span>{property.baths ?? '-'} حمامات</span>
+          <div className="flex flex-col items-center gap-1">
+            <FaBath className="text-gray-400"/>
+            <span>{property.baths ?? '-'}</span>
           </div>
         </div>
-        <Link href={`/properties/${property.slug || property._id}`} className="block w-full text-center bg-secondary text-white py-2 rounded-md hover:bg-secondary-dark transition-colors duration-300">
+        
+        <Link 
+          href={`/properties/${property.slug || property._id}`} 
+          className="block w-full text-center bg-brand-navy text-white font-bold py-3 rounded-lg hover:bg-brand-gold hover:text-brand-navy transition-all duration-300"
+        >
           عرض التفاصيل
         </Link>
       </div>
-    </Card>
+    </div>
   );
 };
 

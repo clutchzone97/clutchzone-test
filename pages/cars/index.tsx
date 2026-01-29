@@ -1,7 +1,10 @@
+
 import Head from 'next/head';
 import type { GetStaticProps } from 'next';
-import Link from 'next/link';
 import { buildCanonical, metaDescriptionFromText } from '@/utils/seo';
+import Header from '@/components/layout/Header';
+import Footer from '@/components/layout/Footer';
+import CarCard from '@/components/listings/CarCard';
 
 type CarDoc = {
   _id: string;
@@ -11,6 +14,12 @@ type CarDoc = {
   slug?: string;
   images?: string[];
   imageUrl?: string;
+  price?: number;
+  year?: number;
+  km?: number;
+  transmission?: string;
+  fuel?: string;
+  featured?: boolean;
 };
 
 type Props = {
@@ -33,8 +42,8 @@ export const getStaticProps: GetStaticProps<Props> = async () => {
 };
 
 export default function CarsIndex({ cars }: Props) {
-  const title = 'السيارات';
-  const description = metaDescriptionFromText('قائمة السيارات المتاحة لدى Clutch Zone.');
+  const title = 'سيارات للبيع | ClutchZone';
+  const description = metaDescriptionFromText('اكتشف أفخم السيارات المستعملة والجديدة في مصر.');
   const canonical = buildCanonical('/cars');
 
   return (
@@ -44,22 +53,24 @@ export default function CarsIndex({ cars }: Props) {
         <meta name="description" content={description} />
         {canonical && <link rel="canonical" href={canonical} />}
       </Head>
-      <main>
-        <h1>{title}</h1>
-        <ul>
-          {cars.map((c) => {
-            const t = c.title || `${c.brand || ''} ${c.model || ''}`.trim() || 'سيارة';
-            const img = (c.images && c.images[0]) || c.imageUrl || '';
-            const href = `/cars/${c.slug || c._id}`;
-            return (
-              <li key={c._id} style={{ marginBottom: 16 }}>
-                <Link href={href}>{t}</Link>
-                {img && <img src={img} alt={t} style={{ maxWidth: 320 }} />}
-              </li>
-            );
-          })}
-        </ul>
+      <Header />
+      <main className="bg-brand-light min-h-screen py-20 mt-16">
+        <div className="container mx-auto px-4">
+          <h1 className="text-3xl font-bold text-brand-navy mb-8 border-r-4 border-brand-gold pr-4">سيارات للبيع</h1>
+          {cars.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {cars.map((c) => (
+                <CarCard key={c._id} car={c} />
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-20 text-gray-500">
+              <p>لا توجد سيارات متاحة حالياً.</p>
+            </div>
+          )}
+        </div>
       </main>
+      <Footer />
     </>
   );
 }

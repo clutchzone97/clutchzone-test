@@ -5,7 +5,6 @@ import { useSiteSettings } from '../../context/SiteSettingsContext';
 
 const Logo: React.FC = () => {
   const { settings } = useSiteSettings();
-  const primary = settings.primaryColor || '#1D4ED8';
   const logo = settings.logoUrl || '';
   const h = typeof settings.logoHeight === 'number' ? settings.logoHeight : 40;
   const w = typeof settings.logoWidth === 'number' ? settings.logoWidth : undefined;
@@ -25,9 +24,9 @@ const Logo: React.FC = () => {
 
   return (
     <Link href="/" aria-label="الانتقال إلى الصفحة الرئيسية" className="inline-block">
-      <div className="text-2xl font-bold tracking-wider">
+      <div className="text-2xl font-bold tracking-wider font-cairo">
         <span className="text-white">CLUTCH</span>
-        <span style={{ color: primary }}> ZONE</span>
+        <span className="text-brand-gold">ZONE</span>
       </div>
     </Link>
   );
