@@ -21,7 +21,7 @@ const Footer: React.FC = () => {
   const hours = (settings as any).businessHours || 'السبت - الخميس: 9:00 - 18:00';
   
   return (
-    <footer className="bg-brand-navy text-white pt-16 pb-8">
+    <footer className="bg-secondary text-white pt-16 pb-8">
       <div className="container mx-auto px-4">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
           {/* Brand Info */}
@@ -39,10 +39,10 @@ const Footer: React.FC = () => {
           <div>
             <h3 className="text-lg font-bold text-white mb-6 border-b border-white/10 pb-2 inline-block">{t('quick_links_title', 'روابط سريعة')}</h3>
             <ul className="space-y-3 text-sm">
-              <li><Link href="/cars" className="text-gray-400 hover:text-brand-gold transition-colors">{t('nav_cars', 'سيارات')}</Link></li>
-              <li><Link href="/properties" className="text-gray-400 hover:text-brand-gold transition-colors">{t('nav_properties', 'عقارات')}</Link></li>
-              <li><Link href="/about" className="text-gray-400 hover:text-brand-gold transition-colors">{t('nav_about', 'من نحن')}</Link></li>
-              <li><Link href="/contact" className="text-gray-400 hover:text-brand-gold transition-colors">{t('nav_contact', 'تواصل معنا')}</Link></li>
+              <li><Link href="/cars" className="text-gray-400 hover:text-primary transition-colors">{t('nav_cars', 'سيارات')}</Link></li>
+              <li><Link href="/properties" className="text-gray-400 hover:text-primary transition-colors">{t('nav_properties', 'عقارات')}</Link></li>
+              <li><Link href="/about" className="text-gray-400 hover:text-primary transition-colors">{t('nav_about', 'من نحن')}</Link></li>
+              <li><Link href="/contact" className="text-gray-400 hover:text-primary transition-colors">{t('nav_contact', 'تواصل معنا')}</Link></li>
             </ul>
           </div>
 
@@ -51,19 +51,19 @@ const Footer: React.FC = () => {
             <h3 className="text-lg font-bold text-white mb-6 border-b border-white/10 pb-2 inline-block">{t('contact_title', 'معلومات التواصل')}</h3>
             <ul className="space-y-4 text-sm">
               <li className="flex items-center text-gray-400 group">
-                <div className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center me-3 group-hover:bg-brand-gold group-hover:text-brand-navy transition-colors">
+                <div className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center me-3 group-hover:bg-primary group-hover:text-white transition-colors">
                   <FaPhone />
                 </div>
                 <span dir="ltr">{phone}</span>
               </li>
               <li className="flex items-center text-gray-400 group">
-                <div className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center me-3 group-hover:bg-brand-gold group-hover:text-brand-navy transition-colors">
+                <div className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center me-3 group-hover:bg-primary group-hover:text-white transition-colors">
                   <FaEnvelope />
                 </div>
                 <span>{email}</span>
               </li>
               <li className="flex items-center text-gray-400 group">
-                <div className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center me-3 group-hover:bg-brand-gold group-hover:text-brand-navy transition-colors">
+                <div className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center me-3 group-hover:bg-primary group-hover:text-white transition-colors">
                   <FaClock />
                 </div>
                 <span>{hours}</span>
@@ -75,19 +75,19 @@ const Footer: React.FC = () => {
           <div>
             <h3 className="text-lg font-bold text-white mb-6 border-b border-white/10 pb-2 inline-block">{t('follow_us_title', 'تابعنا')}</h3>
             <div className="flex gap-3">
-              <a href={facebook} target="_blank" rel="noreferrer" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-gray-400 hover:bg-brand-gold hover:text-brand-navy transition-all">
+              <a href={facebook} target="_blank" rel="noreferrer" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-gray-400 hover:bg-primary hover:text-white transition-all">
                 <FaFacebook size={18} />
               </a>
-              <a href={instagram} target="_blank" rel="noreferrer" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-gray-400 hover:bg-brand-gold hover:text-brand-navy transition-all">
+              <a href={instagram} target="_blank" rel="noreferrer" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-gray-400 hover:bg-primary hover:text-white transition-all">
                 <FaInstagram size={18} />
               </a>
-              <a href={twitter} target="_blank" rel="noreferrer" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-gray-400 hover:bg-brand-gold hover:text-brand-navy transition-all">
+              <a href={twitter} target="_blank" rel="noreferrer" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-gray-400 hover:bg-primary hover:text-white transition-all">
                 <FaXTwitter size={18} />
               </a>
-              <a href={youtube} target="_blank" rel="noreferrer" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-gray-400 hover:bg-brand-gold hover:text-brand-navy transition-all">
+              <a href={youtube} target="_blank" rel="noreferrer" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-gray-400 hover:bg-primary hover:text-white transition-all">
                 <FaYoutube size={18} />
               </a>
-              <a href={tiktok} target="_blank" rel="noreferrer" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-gray-400 hover:bg-brand-gold hover:text-brand-navy transition-all">
+              <a href={tiktok} target="_blank" rel="noreferrer" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-gray-400 hover:bg-primary hover:text-white transition-all">
                 <FaTiktok size={18} />
               </a>
             </div>

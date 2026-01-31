@@ -54,9 +54,9 @@ export default function PropertiesIndex({ properties }: Props) {
         {canonical && <link rel="canonical" href={canonical} />}
       </Head>
       <Header />
-      <main className="bg-brand-light min-h-screen py-20 mt-16">
+      <main className="bg-gray-50 min-h-screen py-20">
         <div className="container mx-auto px-4">
-          <h1 className="text-3xl font-bold text-brand-navy mb-8 border-r-4 border-brand-gold pr-4">عقارات مميزة</h1>
+          <h1 className="text-3xl font-bold text-secondary mb-8 border-r-4 border-primary pr-4">عقارات مميزة</h1>
           {properties.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               {properties.map((p) => (

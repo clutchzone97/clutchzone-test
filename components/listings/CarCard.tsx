@@ -38,17 +38,17 @@ const CarCard: React.FC<CarCardProps> = ({ car }) => {
           className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500" 
         />
         {car.featured && (
-          <span className="absolute top-3 right-3 bg-brand-gold text-brand-navy text-xs font-bold px-3 py-1 rounded-full shadow-md z-10">مميز</span>
+          <span className="absolute top-3 right-3 bg-primary text-white text-xs font-bold px-3 py-1 rounded-full shadow-md z-10">مميز</span>
         )}
         {car.year && (
-          <span className="absolute top-3 left-3 bg-brand-navy/80 backdrop-blur-sm text-white text-xs font-bold px-3 py-1 rounded-full z-10">{car.year}</span>
+          <span className="absolute top-3 left-3 bg-secondary/80 backdrop-blur-sm text-white text-xs font-bold px-3 py-1 rounded-full z-10">{car.year}</span>
         )}
         <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
       </div>
       <div className="p-5">
-        <h3 className="text-lg font-bold text-brand-navy mb-2 line-clamp-1 group-hover:text-brand-gold transition-colors">{displayTitle}</h3>
+        <h3 className="text-lg font-bold text-gray-900 mb-2 line-clamp-1 group-hover:text-primary transition-colors">{displayTitle}</h3>
         {typeof car.price === 'number' && (
-          <p className="text-2xl font-bold text-brand-gold mb-4">{formatCurrency(car.price)}</p>
+          <p className="text-2xl font-bold text-primary mb-4">{formatCurrency(car.price)}</p>
         )}
         <div className="flex items-center justify-between text-sm text-gray-500 mb-4 border-t border-gray-100 pt-4">
           <div className="flex flex-col items-center gap-1">
@@ -68,7 +68,7 @@ const CarCard: React.FC<CarCardProps> = ({ car }) => {
         </div>
         <Link 
           href={`/cars/${car.slug || car._id}`} 
-          className="block w-full text-center bg-brand-navy text-white font-bold py-3 rounded-lg hover:bg-brand-gold hover:text-brand-navy transition-all duration-300"
+          className="block w-full text-center bg-primary text-white font-bold py-3 rounded-lg hover:bg-primary-hover hover:text-white transition-all duration-300"
         >
           عرض التفاصيل
         </Link>

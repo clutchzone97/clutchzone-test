@@ -1,6 +1,11 @@
+
 import Head from 'next/head';
 import type { GetServerSideProps } from 'next';
 import { buildCanonical, metaDescriptionFromText } from '@/utils/seo';
+import Header from '@/components/layout/Header';
+import Footer from '@/components/layout/Footer';
+import ImageGallery from '@/components/ui/ImageGallery';
+import { FaCalendarAlt, FaRoad, FaCogs, FaGasPump, FaWhatsapp, FaPhoneAlt, FaCheck, FaCar } from 'react-icons/fa';
 
 type CarDoc = {
   _id: string;
@@ -16,6 +21,9 @@ type CarDoc = {
   images?: string[];
   imageUrl?: string;
   slug?: string;
+  features?: string[];
+  condition?: string;
+  color?: string;
 };
 
 type Props = {
@@ -43,34 +51,134 @@ export const getServerSideProps: GetServerSideProps<Props> = async (ctx) => {
 };
 
 export default function CarPage({ car, host }: Props) {
-  const title =
-    car.title ||
-    `${car.brand || ''} ${car.model || ''}`.trim() ||
-    'سيارة';
+  const title = car.title || `${car.brand || ''} ${car.model || ''}`.trim() || 'سيارة مميزة';
   const description = metaDescriptionFromText(car.description, `تفاصيل ${title}`);
-  const img = (car.images && car.images[0]) || car.imageUrl || '';
+  const images = car.images && car.images.length > 0 ? car.images : (car.imageUrl ? [car.imageUrl] : []);
   const canonical = buildCanonical(`/cars/${car.slug || car._id}`, host);
+
+  const formatPrice = (price?: number) => {
+    return price 
+      ? new Intl.NumberFormat('ar-EG', { style: 'currency', currency: 'EGP', maximumFractionDigits: 0 }).format(price)
+      : 'السعر عند الاتصال';
+  };
+
+  const specs = [
+    { icon: <FaCalendarAlt />, label: 'السنة', value: car.year },
+    { icon: <FaRoad />, label: 'الممشى', value: car.km ? `${car.km.toLocaleString()} كم` : null },
+    { icon: <FaCogs />, label: 'ناقل الحركة', value: car.transmission },
+    { icon: <FaGasPump />, label: 'الوقود', value: car.fuel },
+    { icon: <FaCar />, label: 'الحالة', value: car.condition || 'مستعمل' },
+  ].filter(s => s.value);
 
   return (
     <>
       <Head>
-        <title>{title}</title>
+        <title>{title} | ClutchZone</title>
         <meta name="description" content={description} />
         {canonical && <link rel="canonical" href={canonical} />}
-        {img && <meta property="og:image" content={img} />}
+        {images[0] && <meta property="og:image" content={images[0]} />}
         <meta property="og:title" content={title} />
         <meta property="og:description" content={description} />
       </Head>
-      <main>
-        <h1>{title}</h1>
-        {img && <img src={img} alt={title} />}
-        {typeof car.price === 'number' && <p>السعر: {car.price}</p>}
-        {car.year && <p>الموديل: {car.year}</p>}
-        {car.km && <p>عدد الكيلومترات: {car.km}</p>}
-        {car.transmission && <p>ناقل الحركة: {car.transmission}</p>}
-        {car.fuel && <p>نوع الوقود: {car.fuel}</p>}
-        {car.description && <p>{car.description}</p>}
+      
+      <Header />
+      
+      <main className="bg-gray-50 min-h-screen py-8">
+        <div className="container mx-auto px-4">
+          
+          {/* Breadcrumb */}
+          <nav className="flex text-sm text-gray-500 mb-6">
+            <a href="/" className="hover:text-primary">الرئيسية</a>
+            <span className="mx-2">/</span>
+            <a href="/cars" className="hover:text-primary">السيارات</a>
+            <span className="mx-2">/</span>
+            <span className="text-gray-800 font-bold">{title}</span>
+          </nav>
+
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            {/* Right Column: Gallery & Details */}
+            <div className="lg:col-span-2 space-y-8">
+              {/* Gallery */}
+              <div className="bg-white rounded-2xl shadow-sm p-4 border border-gray-100">
+                <ImageGallery images={images} alt={title} />
+              </div>
+
+              {/* Specs Grid */}
+              <div className="bg-white rounded-2xl shadow-sm p-6 border border-gray-100">
+                <h3 className="text-xl font-bold text-secondary mb-6 border-r-4 border-primary pr-3">مواصفات السيارة</h3>
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
+                  {specs.map((spec, idx) => (
+                    <div key={idx} className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
+                      <div className="text-primary text-xl">{spec.icon}</div>
+                      <div>
+                        <p className="text-xs text-gray-400">{spec.label}</p>
+                        <p className="font-bold text-secondary">{spec.value}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Description */}
+              {car.description && (
+                <div className="bg-white rounded-2xl shadow-sm p-6 border border-gray-100">
+                  <h3 className="text-xl font-bold text-secondary mb-4 border-r-4 border-primary pr-3">الوصف</h3>
+                  <div className="prose max-w-none text-gray-600 leading-relaxed whitespace-pre-line">
+                    {car.description}
+                  </div>
+                </div>
+              )}
+
+              {/* Features */}
+              {car.features && car.features.length > 0 && (
+                <div className="bg-white rounded-2xl shadow-sm p-6 border border-gray-100">
+                  <h3 className="text-xl font-bold text-secondary mb-4 border-r-4 border-primary pr-3">المميزات الإضافية</h3>
+                  <ul className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    {car.features.map((feature, idx) => (
+                      <li key={idx} className="flex items-center gap-2 text-gray-600">
+                        <FaCheck className="text-primary flex-shrink-0" />
+                        <span>{feature}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </div>
+
+            {/* Left Column: Price & Contact (Sticky) */}
+            <div className="lg:col-span-1">
+              <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100 sticky top-24">
+                <h1 className="text-2xl font-bold text-secondary mb-2 leading-tight">{title}</h1>
+                <div className="flex items-center gap-2 text-gray-500 mb-6 text-sm">
+                   {car.brand} • {car.model}
+                </div>
+                
+                <div className="text-3xl font-bold text-primary mb-8">
+                  {formatPrice(car.price)}
+                </div>
+
+                <div className="space-y-4">
+                  <button className="w-full bg-secondary text-white font-bold py-4 rounded-xl flex items-center justify-center gap-3 hover:bg-primary hover:text-white transition-all shadow-lg">
+                    <FaPhoneAlt />
+                    <span>إظهار رقم الهاتف</span>
+                  </button>
+                  <button className="w-full bg-[#25D366] text-white font-bold py-4 rounded-xl flex items-center justify-center gap-3 hover:bg-[#128C7E] transition-all shadow-lg">
+                    <FaWhatsapp className="text-xl" />
+                    <span>تواصل عبر واتساب</span>
+                  </button>
+                </div>
+
+                <div className="mt-8 pt-6 border-t border-gray-100 text-center">
+                  <p className="text-sm text-gray-400 mb-2">معرف الإعلان: {car._id.substring(0, 8)}</p>
+                  <p className="text-xs text-gray-300">تم النشر عبر ClutchZone</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </main>
+      
+      <Footer />
     </>
   );
 }

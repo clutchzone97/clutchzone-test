@@ -38,10 +38,10 @@ const PropertyCard: React.FC<PropertyCardProps> = ({ property }) => {
           className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500" 
         />
         {property.featured && (
-          <span className="absolute top-3 right-3 bg-brand-gold text-brand-navy text-xs font-bold px-3 py-1 rounded-full shadow-md z-10">مميز</span>
+          <span className="absolute top-3 right-3 bg-primary text-white text-xs font-bold px-3 py-1 rounded-full shadow-md z-10">مميز</span>
         )}
         {property.purpose && (
-          <span className={`absolute top-3 left-3 text-white text-xs font-bold px-3 py-1 rounded-full z-10 shadow-sm ${isSale ? 'bg-brand-navy' : 'bg-green-600'}`}>
+          <span className={`absolute top-3 left-3 text-white text-xs font-bold px-3 py-1 rounded-full z-10 shadow-sm ${isSale ? 'bg-secondary' : 'bg-green-600'}`}>
             {property.purpose}
           </span>
         )}
@@ -49,12 +49,12 @@ const PropertyCard: React.FC<PropertyCardProps> = ({ property }) => {
       </div>
       <div className="p-5 flex flex-col flex-1">
         <div className="flex items-center text-sm text-gray-500 mb-2">
-          <FaMapMarkerAlt className="me-1 text-brand-gold"/>
+          <FaMapMarkerAlt className="me-1 text-primary"/>
           <span className="truncate">{property.location || '-'}</span>
         </div>
-        <h3 className="text-xl font-bold text-brand-navy mb-2 line-clamp-1 group-hover:text-brand-gold transition-colors">{property.title}</h3>
+        <h3 className="text-xl font-bold text-gray-900 mb-2 line-clamp-1 group-hover:text-primary transition-colors">{property.title}</h3>
         {typeof property.price === 'number' && (
-          <p className="text-2xl font-bold text-brand-gold mb-4">{formatCurrency(property.price)}</p>
+          <p className="text-2xl font-bold text-primary mb-4">{formatCurrency(property.price)}</p>
         )}
         
         <div className="mt-auto pt-4 border-t border-gray-100 grid grid-cols-3 gap-2 text-sm text-gray-600 mb-4">
@@ -74,7 +74,7 @@ const PropertyCard: React.FC<PropertyCardProps> = ({ property }) => {
         
         <Link 
           href={`/properties/${property.slug || property._id}`} 
-          className="block w-full text-center bg-brand-navy text-white font-bold py-3 rounded-lg hover:bg-brand-gold hover:text-brand-navy transition-all duration-300"
+          className="block w-full text-center bg-primary text-white font-bold py-3 rounded-lg hover:bg-primary-hover hover:text-white transition-all duration-300"
         >
           عرض التفاصيل
         </Link>

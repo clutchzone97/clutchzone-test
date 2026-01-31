@@ -9,19 +9,20 @@ module.exports = {
     extend: {
       colors: {
         brand: {
-          navy: '#0A192F', // Deep Blue / Dark Navy
-          gold: '#C6A87C', // Accent Gold
-          blue: '#2563EB', // Electric Blue (optional accent)
           light: '#F8FAFC', // Light background
         },
         primary: {
-          DEFAULT: '#0A192F', 
-          dark: '#020617',
+          DEFAULT: '#3789DB', // Primary Blue
+          hover: '#37BDDB',   // Hover / Active
         },
         secondary: {
-          DEFAULT: '#C6A87C',
-          dark: '#B89665',
+          DEFAULT: '#4D37DB', // Secondary Purple-Blue
         },
+        accent: {
+          1: '#3755DB', // Royal Blue
+          2: '#37BDDB', // Cyan/Turquoise
+        },
+        muted: '#7F90DB', // Muted Blue
         dark: '#1f2937',
       },
       fontFamily: {

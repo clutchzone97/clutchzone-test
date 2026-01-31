@@ -31,8 +31,8 @@ const Header: React.FC = () => {
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        scrolled ? 'bg-brand-navy shadow-lg py-3' : 'bg-transparent py-5'
+      className={`sticky top-0 left-0 right-0 z-50 bg-secondary shadow-lg transition-all duration-300 ${
+        scrolled ? 'py-3' : 'py-4'
       }`}
     >
       <div className="container mx-auto px-4 flex items-center justify-between">
@@ -47,8 +47,8 @@ const Header: React.FC = () => {
               href={link.path}
               className={`text-lg font-medium transition-colors ${
                 router.pathname === link.path
-                  ? 'text-brand-gold'
-                  : 'text-white hover:text-brand-gold'
+                  ? 'text-accent-2'
+                  : 'text-white hover:text-accent-2'
               }`}
             >
               {link.label}
@@ -62,7 +62,7 @@ const Header: React.FC = () => {
           {/* Optional CTA */}
           {/* <Link
             href="/list-item"
-            className="bg-brand-gold text-brand-navy px-5 py-2 rounded-full font-bold hover:bg-white transition-all"
+            className="bg-primary text-white px-5 py-2 rounded-full font-bold hover:bg-primary-hover transition-all"
           >
             {t('list_your_item', 'أضف إعلانك')}
           </Link> */}
@@ -80,13 +80,13 @@ const Header: React.FC = () => {
 
       {/* Mobile Menu */}
       {mobileOpen && (
-        <div className="md:hidden absolute top-full left-0 right-0 bg-brand-navy shadow-xl border-t border-white/10 p-4 flex flex-col space-y-4">
+        <div className="md:hidden absolute top-full left-0 right-0 bg-secondary shadow-xl border-t border-white/10 p-4 flex flex-col space-y-4">
           {navLinks.map((link) => (
             <Link
               key={link.path}
               href={link.path}
               className={`block text-lg font-medium ${
-                router.pathname === link.path ? 'text-brand-gold' : 'text-white'
+                router.pathname === link.path ? 'text-accent-2' : 'text-white'
               }`}
               onClick={() => setMobileOpen(false)}
             >

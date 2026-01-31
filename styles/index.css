@@ -19,11 +19,11 @@ html, body, #root {
 }
 
 body {
-  @apply bg-brand-light text-brand-navy transition-colors duration-300;
+  @apply bg-brand-light text-gray-900 transition-colors duration-300;
 }
 
 .dark body {
-  @apply bg-brand-navy text-brand-light;
+  @apply bg-secondary text-brand-light;
 }
 
 /* Scrollbar Styling */

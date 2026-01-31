@@ -26,7 +26,7 @@ const Logo: React.FC = () => {
     <Link href="/" aria-label="الانتقال إلى الصفحة الرئيسية" className="inline-block">
       <div className="text-2xl font-bold tracking-wider font-cairo">
         <span className="text-white">CLUTCH</span>
-        <span className="text-brand-gold">ZONE</span>
+        <span className="text-primary">ZONE</span>
       </div>
     </Link>
   );

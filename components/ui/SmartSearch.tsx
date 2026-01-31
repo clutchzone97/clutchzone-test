@@ -46,7 +46,7 @@ const SmartSearch: React.FC = () => {
           <button
             className={`flex-1 py-4 text-center text-lg font-bold flex items-center justify-center gap-2 transition-colors ${
               activeTab === 'cars'
-                ? 'bg-white text-brand-navy border-b-2 border-brand-gold'
+                ? 'bg-white text-secondary border-b-2 border-primary'
                 : 'bg-gray-50 text-gray-500 hover:bg-gray-100'
             }`}
             onClick={() => setActiveTab('cars')}
@@ -57,7 +57,7 @@ const SmartSearch: React.FC = () => {
           <button
             className={`flex-1 py-4 text-center text-lg font-bold flex items-center justify-center gap-2 transition-colors ${
               activeTab === 'properties'
-                ? 'bg-white text-brand-navy border-b-2 border-brand-gold'
+                ? 'bg-white text-secondary border-b-2 border-primary'
                 : 'bg-gray-50 text-gray-500 hover:bg-gray-100'
             }`}
             onClick={() => setActiveTab('properties')}
@@ -76,7 +76,7 @@ const SmartSearch: React.FC = () => {
                 <input
                   type="text"
                   placeholder={t('filter_brand', 'الماركة (مثال: BMW)')}
-                  className="w-full h-12 pr-10 pl-4 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:border-brand-gold focus:ring-1 focus:ring-brand-gold transition-all"
+                  className="w-full h-12 pr-10 pl-4 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all"
                   value={carBrand}
                   onChange={(e) => setCarBrand(e.target.value)}
                 />
@@ -84,7 +84,7 @@ const SmartSearch: React.FC = () => {
               <div className="relative">
                 <FaTag className="absolute top-1/2 -translate-y-1/2 right-4 text-gray-400" />
                 <select
-                  className="w-full h-12 pr-10 pl-4 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:border-brand-gold focus:ring-1 focus:ring-brand-gold transition-all appearance-none"
+                  className="w-full h-12 pr-10 pl-4 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all appearance-none"
                   value={carPrice}
                   onChange={(e) => setCarPrice(e.target.value)}
                 >
@@ -98,7 +98,7 @@ const SmartSearch: React.FC = () => {
               <div className="relative">
                 <FaCalendarAlt className="absolute top-1/2 -translate-y-1/2 right-4 text-gray-400" />
                 <select
-                  className="w-full h-12 pr-10 pl-4 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:border-brand-gold focus:ring-1 focus:ring-brand-gold transition-all appearance-none"
+                  className="w-full h-12 pr-10 pl-4 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all appearance-none"
                   value={carYear}
                   onChange={(e) => setCarYear(e.target.value)}
                 >
@@ -111,7 +111,7 @@ const SmartSearch: React.FC = () => {
               </div>
               <button
                 type="submit"
-                className="w-full h-12 bg-brand-navy text-white font-bold rounded-lg hover:bg-brand-gold transition-colors flex items-center justify-center gap-2 shadow-lg"
+                className="w-full h-12 bg-primary text-white font-bold rounded-lg hover:bg-primary-hover transition-colors flex items-center justify-center gap-2 shadow-lg"
               >
                 <FaSearch />
                 {t('search_btn', 'بحث')}
@@ -124,7 +124,7 @@ const SmartSearch: React.FC = () => {
                 <input
                   type="text"
                   placeholder={t('filter_location', 'الموقع (مثال: القاهرة الجديدة)')}
-                  className="w-full h-12 pr-10 pl-4 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:border-brand-gold focus:ring-1 focus:ring-brand-gold transition-all"
+                  className="w-full h-12 pr-10 pl-4 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all"
                   value={propLocation}
                   onChange={(e) => setPropLocation(e.target.value)}
                 />
@@ -132,7 +132,7 @@ const SmartSearch: React.FC = () => {
               <div className="relative">
                 <FaBuilding className="absolute top-1/2 -translate-y-1/2 right-4 text-gray-400" />
                 <select
-                  className="w-full h-12 pr-10 pl-4 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:border-brand-gold focus:ring-1 focus:ring-brand-gold transition-all appearance-none"
+                  className="w-full h-12 pr-10 pl-4 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all appearance-none"
                   value={propType}
                   onChange={(e) => setPropType(e.target.value)}
                 >
@@ -145,7 +145,7 @@ const SmartSearch: React.FC = () => {
               <div className="relative">
                 <FaTag className="absolute top-1/2 -translate-y-1/2 right-4 text-gray-400" />
                 <select
-                  className="w-full h-12 pr-10 pl-4 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:border-brand-gold focus:ring-1 focus:ring-brand-gold transition-all appearance-none"
+                  className="w-full h-12 pr-10 pl-4 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all appearance-none"
                   value={propPrice}
                   onChange={(e) => setPropPrice(e.target.value)}
                 >
@@ -158,7 +158,7 @@ const SmartSearch: React.FC = () => {
               </div>
               <button
                 type="submit"
-                className="w-full h-12 bg-brand-navy text-white font-bold rounded-lg hover:bg-brand-gold transition-colors flex items-center justify-center gap-2 shadow-lg"
+                className="w-full h-12 bg-primary text-white font-bold rounded-lg hover:bg-primary-hover transition-colors flex items-center justify-center gap-2 shadow-lg"
               >
                 <FaSearch />
                 {t('search_btn', 'بحث')}
