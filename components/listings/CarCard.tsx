@@ -27,14 +27,18 @@ interface CarCardProps {
 }
 
 const CarCard: React.FC<CarCardProps> = ({ car }) => {
+  const [imgError, setImgError] = React.useState(false);
   const displayTitle = car.title || `${car.brand || ''} ${car.model || ''}`.trim() || 'سيارة';
   const img = (car.images && car.images[0]) || car.imageUrl || `https://picsum.photos/seed/${car._id || 'car'}/640/480`;
+  const imgSrc = imgError ? 'https://placehold.co/600x400?text=Car' : img;
+
   return (
     <div className="group bg-white rounded-xl shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-100">
       <div className="relative overflow-hidden aspect-[4/3]">
         <img 
-          src={img} 
+          src={imgSrc} 
           alt={displayTitle} 
+          onError={() => setImgError(true)}
           className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500" 
         />
         {car.featured && (

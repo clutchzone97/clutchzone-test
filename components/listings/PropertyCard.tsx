@@ -27,14 +27,18 @@ interface PropertyCardProps {
 }
 
 const PropertyCard: React.FC<PropertyCardProps> = ({ property }) => {
+  const [imgError, setImgError] = React.useState(false);
   const isSale = property.purpose === 'للبيع';
   const img = (property.images && property.images[0]) || property.imageUrl || `https://picsum.photos/seed/${property._id || 'property'}/640/480`;
+  const imgSrc = imgError ? 'https://placehold.co/600x400?text=Property' : img;
+
   return (
     <div className="group bg-white rounded-xl shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-100 flex flex-col">
       <div className="relative overflow-hidden aspect-[16/9]">
         <img 
-          src={img} 
+          src={imgSrc} 
           alt={property.title} 
+          onError={() => setImgError(true)}
           className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500" 
         />
         {property.featured && (
